@@ -1,11 +1,11 @@
-package com.roxasjearom.projectfields
+package com.roxasjearom.projectfields.presentation.contactreference
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.ViewModel
 
-class MainViewModel : ViewModel() {
+class ContactReferenceViewModel : ViewModel() {
 
     private var _contactDetails = listOf(ContactDetails(0)).toMutableStateList()
     val contactDetails: List<ContactDetails> = _contactDetails
