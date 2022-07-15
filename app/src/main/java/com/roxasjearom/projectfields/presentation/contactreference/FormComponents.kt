@@ -1,9 +1,6 @@
 package com.roxasjearom.projectfields.presentation.contactreference
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -17,15 +14,21 @@ import com.roxasjearom.projectfields.ui.theme.ProjectFieldsTheme
 @Composable
 fun ContactDetailsList(
     contactList: List<ContactDetails>,
+    onSelectedOptionChanged: (ContactDetails, String) -> Unit,
     onFirstNameChanged: (ContactDetails, String) -> Unit,
+    onLastNameChanged: (ContactDetails, String) -> Unit,
+    onMobileNumberChanged: (ContactDetails, String) -> Unit,
     onCloseClicked: (ContactDetails) -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         for (contact in contactList) {
             FormSection(
                 contactDetails = contact,
+                onSelectedOptionChanged = { onSelectedOptionChanged(contact, it) },
                 onFirstNameChanged = { onFirstNameChanged(contact, it) },
-                onCloseClicked = { onCloseClicked(contact) },
+                onLastNameChanged = { onLastNameChanged(contact, it) },
+                onMobileNumberChanged = { onMobileNumberChanged(contact, it) },
+                onCloseClicked = { onCloseClicked(contact) }
             )
         }
     }
@@ -34,7 +37,10 @@ fun ContactDetailsList(
 @Composable
 fun FormSection(
     contactDetails: ContactDetails,
+    onSelectedOptionChanged: (String) -> Unit,
     onFirstNameChanged: (String) -> Unit,
+    onLastNameChanged: (String) -> Unit,
+    onMobileNumberChanged: (String) -> Unit,
     onCloseClicked: () -> Unit
 ) {
     Column(
@@ -43,26 +49,57 @@ fun FormSection(
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        if (contactDetails.id != 0) {
-            IconButton(
-                onClick = onCloseClicked,
-                modifier = Modifier.align(alignment = Alignment.End)
-            ) {
-                Icon(Icons.Default.Close, contentDescription = "Close Button")
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth(),
+        ) {
+            Text(
+                text = contactDetails.headerTitle,
+                style = MaterialTheme.typography.h6
+            )
+            if (contactDetails.id != 0) {
+                IconButton(
+                    onClick = onCloseClicked,
+                ) {
+                    Icon(Icons.Default.Close, contentDescription = "Close Button")
+                }
             }
         }
+
 
         DropdownField(
             label = "Relationship",
             list = listOf("Father", "Mother", "Brother", "Sister", "Friend"),
-            modifier = Modifier.fillMaxWidth()
-        )
-        TextInputField(
-            label = "First Name",
             modifier = Modifier.fillMaxWidth(),
-            text = contactDetails.firstName.value,
-            onTextChanged = onFirstNameChanged,
-            hint = "Juan",
+            selectedOptionText = contactDetails.relationShip.value,
+            onSelectedOptionChanged = onSelectedOptionChanged,
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            TextInputField(
+                label = "First Name",
+                modifier = Modifier.weight(1f),
+                text = contactDetails.firstName.value,
+                onTextChanged = onFirstNameChanged,
+                hint = "Juan",
+            )
+            TextInputField(
+                label = "Last Name",
+                modifier = Modifier.weight(1f),
+                text = contactDetails.lastName.value,
+                onTextChanged = onLastNameChanged,
+                hint = "Dela Cruz",
+            )
+        }
+        TextInputField(
+            label = "Mobile Number",
+            modifier = Modifier.fillMaxWidth(),
+            text = contactDetails.mobileNumber.value,
+            onTextChanged = onMobileNumberChanged,
+            hint = "0945 123 4567",
         )
     }
 }
@@ -75,7 +112,7 @@ fun TextInputField(
     text: String,
     onTextChanged: (String) -> Unit,
 ) {
-    TextField(
+    OutlinedTextField(
         value = text,
         onValueChange = { onTextChanged(it) },
         label = { Text(label) },
@@ -89,10 +126,11 @@ fun TextInputField(
 fun DropdownField(
     label: String,
     list: List<String>,
+    selectedOptionText: String,
+    onSelectedOptionChanged: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(false) }
-    var selectedOptionText by remember { mutableStateOf("") }
     ExposedDropdownMenuBox(
         expanded = expanded,
         onExpandedChange = {
@@ -100,7 +138,7 @@ fun DropdownField(
         },
         modifier = modifier.fillMaxWidth(),
     ) {
-        TextField(
+        OutlinedTextField(
             readOnly = true,
             value = selectedOptionText,
             onValueChange = { },
@@ -110,7 +148,6 @@ fun DropdownField(
                     expanded = expanded
                 )
             },
-            colors = ExposedDropdownMenuDefaults.textFieldColors(),
             modifier = modifier.fillMaxWidth(),
         )
         ExposedDropdownMenu(
@@ -122,7 +159,7 @@ fun DropdownField(
             list.forEach { selectionOption ->
                 DropdownMenuItem(
                     onClick = {
-                        selectedOptionText = selectionOption
+                        onSelectedOptionChanged(selectionOption)
                         expanded = false
                     },
                 ) {
@@ -135,7 +172,7 @@ fun DropdownField(
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, widthDp = 320, heightDp = 320)
 @Composable
 fun DefaultPreview() {
     ProjectFieldsTheme {

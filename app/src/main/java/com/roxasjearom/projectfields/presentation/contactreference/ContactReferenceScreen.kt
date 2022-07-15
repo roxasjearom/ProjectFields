@@ -19,10 +19,19 @@ fun MainScreen(viewModel: ContactReferenceViewModel = viewModel()) {
     ) {
         ContactDetailsList(
             contactList = viewModel.contactDetails,
-            onFirstNameChanged = { contact, text ->
-                viewModel.updateFirstName(contact, text)
+            onFirstNameChanged = { contact, firstName ->
+                viewModel.updateFirstName(contact, firstName)
             },
-            onCloseClicked = { viewModel.removeContact(it) }
+            onLastNameChanged = { contact, lastName ->
+                viewModel.updateLastName(contact, lastName)
+            },
+            onMobileNumberChanged = { contact, mobileNumber ->
+                viewModel.updateMobileNumber(contact, mobileNumber)
+            },
+            onSelectedOptionChanged = { contact, relationship ->
+                viewModel.updateRelationship(contact, relationship)
+            },
+            onCloseClicked = { viewModel.removeContact(it) },
         )
 
         Spacer(modifier = Modifier.weight(1f))

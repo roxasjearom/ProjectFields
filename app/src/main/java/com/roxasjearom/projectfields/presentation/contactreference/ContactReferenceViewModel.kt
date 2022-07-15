@@ -7,14 +7,13 @@ import androidx.lifecycle.ViewModel
 
 class ContactReferenceViewModel : ViewModel() {
 
-    private var _contactDetails = listOf(ContactDetails(0)).toMutableStateList()
+    private var _contactDetails = listOf(
+        ContactDetails(
+            id = 0,
+            headerTitle = "Primary contact reference",
+        )
+    ).toMutableStateList()
     val contactDetails: List<ContactDetails> = _contactDetails
-
-    fun updateFirstName(contact: ContactDetails, firstName: String) {
-        contactDetails.find { it.id == contact.id }?.let { contactDetails ->
-            contactDetails.firstName.value = firstName
-        }
-    }
 
     fun updateRelationship(contact: ContactDetails, relationShip: String) {
         contactDetails.find { it.id == contact.id }?.let { contactDetails ->
@@ -22,8 +21,31 @@ class ContactReferenceViewModel : ViewModel() {
         }
     }
 
+    fun updateFirstName(contact: ContactDetails, firstName: String) {
+        contactDetails.find { it.id == contact.id }?.let { contactDetails ->
+            contactDetails.firstName.value = firstName
+        }
+    }
+
+    fun updateLastName(contact: ContactDetails, lastName: String) {
+        contactDetails.find { it.id == contact.id }?.let { contactDetails ->
+            contactDetails.lastName.value = lastName
+        }
+    }
+
+    fun updateMobileNumber(contact: ContactDetails, mobileNumber: String) {
+        contactDetails.find { it.id == contact.id }?.let { contactDetails ->
+            contactDetails.mobileNumber.value = mobileNumber
+        }
+    }
+
     fun addContact() {
-        _contactDetails.add(ContactDetails(id = _contactDetails.size))
+        _contactDetails.add(
+            ContactDetails(
+                id = _contactDetails.size,
+                headerTitle = "Additional contact reference"
+            )
+        )
     }
 
     fun removeContact(selectedContact: ContactDetails) {
@@ -33,6 +55,10 @@ class ContactReferenceViewModel : ViewModel() {
 
 data class ContactDetails(
     val id: Int,
-    val firstName: MutableState<String> = mutableStateOf(""),
+    val headerTitle: String,
     val relationShip: MutableState<String> = mutableStateOf(""),
+    val firstName: MutableState<String> = mutableStateOf(""),
+    val isFirstNameValid: MutableState<Boolean> = mutableStateOf(false),
+    val lastName: MutableState<String> = mutableStateOf(""),
+    val mobileNumber: MutableState<String> = mutableStateOf(""),
 )
