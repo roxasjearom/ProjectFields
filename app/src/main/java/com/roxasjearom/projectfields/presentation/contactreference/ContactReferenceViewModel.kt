@@ -1,64 +1,63 @@
 package com.roxasjearom.projectfields.presentation.contactreference
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.toMutableStateList
+import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 
 class ContactReferenceViewModel : ViewModel() {
 
-    private var _contactDetails = listOf(
-        ContactDetails(
+    private var _contactReferences = listOf(
+        ContactReference(
             id = 0,
             headerTitle = "Primary contact reference",
         )
     ).toMutableStateList()
-    val contactDetails: List<ContactDetails> = _contactDetails
+    val contactReferences: List<ContactReference> = _contactReferences
 
-    fun updateRelationship(contact: ContactDetails, relationShip: String) {
-        contactDetails.find { it.id == contact.id }?.let { contactDetails ->
-            contactDetails.relationShip.value = relationShip
+    fun updateRelationship(contact: ContactReference, relationShip: String) {
+        contactReferences.find { it.id == contact.id }?.let { contactDetails ->
+            contactDetails.relationShip = relationShip
         }
     }
 
-    fun updateFirstName(contact: ContactDetails, firstName: String) {
-        contactDetails.find { it.id == contact.id }?.let { contactDetails ->
-            contactDetails.firstName.value = firstName
+    fun updateFirstName(contact: ContactReference, firstName: String) {
+        contactReferences.find { it.id == contact.id }?.let { contactDetails ->
+            contactDetails.firstName = firstName
         }
     }
 
-    fun updateLastName(contact: ContactDetails, lastName: String) {
-        contactDetails.find { it.id == contact.id }?.let { contactDetails ->
-            contactDetails.lastName.value = lastName
+    fun updateLastName(contact: ContactReference, lastName: String) {
+        contactReferences.find { it.id == contact.id }?.let { contactDetails ->
+            contactDetails.lastName = lastName
         }
     }
 
-    fun updateMobileNumber(contact: ContactDetails, mobileNumber: String) {
-        contactDetails.find { it.id == contact.id }?.let { contactDetails ->
-            contactDetails.mobileNumber.value = mobileNumber
+    fun updateMobileNumber(contact: ContactReference, mobileNumber: String) {
+        contactReferences.find { it.id == contact.id }?.let { contactDetails ->
+            contactDetails.mobileNumber = mobileNumber
         }
     }
 
     fun addContact() {
-        _contactDetails.add(
-            ContactDetails(
-                id = _contactDetails.size,
+        _contactReferences.add(
+            ContactReference(
+                id = _contactReferences.size,
                 headerTitle = "Additional contact reference"
             )
         )
     }
 
-    fun removeContact(selectedContact: ContactDetails) {
-        _contactDetails.remove(selectedContact)
+    fun removeContact(selectedContact: ContactReference) {
+        _contactReferences.remove(selectedContact)
     }
 }
 
-data class ContactDetails(
+data class ContactReference(
     val id: Int,
     val headerTitle: String,
-    val relationShip: MutableState<String> = mutableStateOf(""),
-    val firstName: MutableState<String> = mutableStateOf(""),
-    val isFirstNameValid: MutableState<Boolean> = mutableStateOf(false),
-    val lastName: MutableState<String> = mutableStateOf(""),
-    val mobileNumber: MutableState<String> = mutableStateOf(""),
-)
+) {
+    var relationShip: String by mutableStateOf("")
+    var firstName: String by mutableStateOf("")
+    var isFirstNameValid: Boolean by mutableStateOf(false)
+    var lastName: String by mutableStateOf("")
+    var mobileNumber: String by mutableStateOf("")
+}

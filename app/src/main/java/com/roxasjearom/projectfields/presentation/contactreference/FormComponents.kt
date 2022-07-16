@@ -13,17 +13,17 @@ import com.roxasjearom.projectfields.ui.theme.ProjectFieldsTheme
 
 @Composable
 fun ContactDetailsList(
-    contactList: List<ContactDetails>,
-    onSelectedOptionChanged: (ContactDetails, String) -> Unit,
-    onFirstNameChanged: (ContactDetails, String) -> Unit,
-    onLastNameChanged: (ContactDetails, String) -> Unit,
-    onMobileNumberChanged: (ContactDetails, String) -> Unit,
-    onCloseClicked: (ContactDetails) -> Unit,
+    contactList: List<ContactReference>,
+    onSelectedOptionChanged: (ContactReference, String) -> Unit,
+    onFirstNameChanged: (ContactReference, String) -> Unit,
+    onLastNameChanged: (ContactReference, String) -> Unit,
+    onMobileNumberChanged: (ContactReference, String) -> Unit,
+    onCloseClicked: (ContactReference) -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         for (contact in contactList) {
             FormSection(
-                contactDetails = contact,
+                contactReference = contact,
                 onSelectedOptionChanged = { onSelectedOptionChanged(contact, it) },
                 onFirstNameChanged = { onFirstNameChanged(contact, it) },
                 onLastNameChanged = { onLastNameChanged(contact, it) },
@@ -36,7 +36,7 @@ fun ContactDetailsList(
 
 @Composable
 fun FormSection(
-    contactDetails: ContactDetails,
+    contactReference: ContactReference,
     onSelectedOptionChanged: (String) -> Unit,
     onFirstNameChanged: (String) -> Unit,
     onLastNameChanged: (String) -> Unit,
@@ -55,10 +55,10 @@ fun FormSection(
             modifier = Modifier.fillMaxWidth(),
         ) {
             Text(
-                text = contactDetails.headerTitle,
+                text = contactReference.headerTitle,
                 style = MaterialTheme.typography.h6
             )
-            if (contactDetails.id != 0) {
+            if (contactReference.id != 0) {
                 IconButton(
                     onClick = onCloseClicked,
                 ) {
@@ -72,7 +72,7 @@ fun FormSection(
             label = "Relationship",
             list = listOf("Father", "Mother", "Brother", "Sister", "Friend"),
             modifier = Modifier.fillMaxWidth(),
-            selectedOptionText = contactDetails.relationShip.value,
+            selectedOptionText = contactReference.relationShip,
             onSelectedOptionChanged = onSelectedOptionChanged,
         )
         Row(
@@ -82,14 +82,14 @@ fun FormSection(
             TextInputField(
                 label = "First Name",
                 modifier = Modifier.weight(1f),
-                text = contactDetails.firstName.value,
+                text = contactReference.firstName,
                 onTextChanged = onFirstNameChanged,
                 hint = "Juan",
             )
             TextInputField(
                 label = "Last Name",
                 modifier = Modifier.weight(1f),
-                text = contactDetails.lastName.value,
+                text = contactReference.lastName,
                 onTextChanged = onLastNameChanged,
                 hint = "Dela Cruz",
             )
@@ -97,7 +97,7 @@ fun FormSection(
         TextInputField(
             label = "Mobile Number",
             modifier = Modifier.fillMaxWidth(),
-            text = contactDetails.mobileNumber.value,
+            text = contactReference.mobileNumber,
             onTextChanged = onMobileNumberChanged,
             hint = "0945 123 4567",
         )

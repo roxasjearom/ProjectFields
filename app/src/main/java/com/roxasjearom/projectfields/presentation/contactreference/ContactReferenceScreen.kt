@@ -18,7 +18,7 @@ fun MainScreen(viewModel: ContactReferenceViewModel = viewModel()) {
             .verticalScroll(rememberScrollState())
     ) {
         ContactDetailsList(
-            contactList = viewModel.contactDetails,
+            contactList = viewModel.contactReferences,
             onFirstNameChanged = { contact, firstName ->
                 viewModel.updateFirstName(contact, firstName)
             },
@@ -36,7 +36,7 @@ fun MainScreen(viewModel: ContactReferenceViewModel = viewModel()) {
 
         Spacer(modifier = Modifier.weight(1f))
 
-        if (viewModel.contactDetails.size < 5) {
+        if (viewModel.contactReferences.size < 5) {
             Button(
                 onClick = { viewModel.addContact() },
                 modifier = Modifier
