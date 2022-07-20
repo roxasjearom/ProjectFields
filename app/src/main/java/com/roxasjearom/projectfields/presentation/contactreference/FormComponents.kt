@@ -81,6 +81,7 @@ fun FormSection(
         ) {
             TextInputField(
                 label = "First Name",
+                isValid = contactReference.isFirstNameValid,
                 modifier = Modifier.weight(1f),
                 text = contactReference.firstName,
                 onTextChanged = onFirstNameChanged,
@@ -88,6 +89,7 @@ fun FormSection(
             )
             TextInputField(
                 label = "Last Name",
+                isValid = contactReference.isLastNameValid,
                 modifier = Modifier.weight(1f),
                 text = contactReference.lastName,
                 onTextChanged = onLastNameChanged,
@@ -96,6 +98,7 @@ fun FormSection(
         }
         TextInputField(
             label = "Mobile Number",
+            isValid = contactReference.isMobileNumberValid,
             modifier = Modifier.fillMaxWidth(),
             text = contactReference.mobileNumber,
             onTextChanged = onMobileNumberChanged,
@@ -107,18 +110,32 @@ fun FormSection(
 @Composable
 fun TextInputField(
     label: String,
+    isValid: Boolean,
     modifier: Modifier = Modifier,
     hint: String = label,
     text: String,
     onTextChanged: (String) -> Unit,
 ) {
-    OutlinedTextField(
-        value = text,
-        onValueChange = { onTextChanged(it) },
-        label = { Text(label) },
-        placeholder = { Text(hint) },
-        modifier = modifier,
-    )
+    Column(modifier = modifier) {
+        OutlinedTextField(
+            value = text,
+            onValueChange = { onTextChanged(it) },
+            modifier = Modifier.fillMaxWidth(),
+            label = { Text(label) },
+            placeholder = { Text(hint) },
+            isError = !isValid,
+            singleLine = true,
+        )
+        if (!isValid) {
+            Text(
+                text = "Invalid input",
+                color = MaterialTheme.colors.error,
+                style = MaterialTheme.typography.caption,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+        }
+    }
+
 }
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -178,6 +195,7 @@ fun DefaultPreview() {
     ProjectFieldsTheme {
         TextInputField(
             label = "First Name",
+            isValid = true,
             text = "Jamal",
             onTextChanged = {},
             hint = "Juan",
